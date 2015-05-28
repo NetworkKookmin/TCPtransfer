@@ -1,6 +1,6 @@
 # TCPtransfer
 
-NETWORK HW3 is TCPtransfer !
+NETWORK HW4 is TCPtransfer !
 
 KOOKMIN UNIVERSITY.
 COMPUTER SCIENCE
