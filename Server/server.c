@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -33,7 +32,8 @@ int main(int argc, char *argv[])
 	char strACK[10] = "ACK";
 	char strEmpty[10] = "Empty";
 	int fileSize = 0;              //파일의 전체 사이즈를 나타내는 변수
-	int BUFSIZE = 64;
+	int SendBUFSIZE = 64;
+	int RecvBUFSIZE = 64;
 	int sumfileSize = 0;           //받아오거나 보내는 파일의 현재 사이즈를 나타내는 변수
 	int secondCount = 0;           // 1초를 나타내기 위한 count 단위
 	double percent;
@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
 	int sizeCount = 0;
 	char nameAndSize[50];
 	char strFinish[50] = "finish";
+
+
 
 	if (argc != 2) {
 		(void)fprintf(stderr, "usage: %s service|port\n", argv[0]);
@@ -97,11 +99,18 @@ int main(int argc, char *argv[])
 	}
 
 	while (1){
+
+
+
 		printf("wait message!\n");
 		nread = read(new_sock, msg, 20);
 		// client 에서 보낸 command명령 받음
 
 		////////////////////////////////client put
+
+		if (!strcmp(strClose, msg)){
+			break;
+		}
 
 		if (!strcmp(strPut, msg)){
 
@@ -152,7 +161,7 @@ int main(int argc, char *argv[])
 			strcpy(msg, strEmpty);
 			while (1){
 
-				retval = read(new_sock, buf, BUFSIZE);
+				retval = read(new_sock, buf, RecvBUFSIZE);
 				sumfileSize += retval; //그것들을 현재받는파일의 사이즈에 더해준다 // 현재 크기를 나타냄.
 
 				fwrite(buf, 1, retval, fp);
@@ -225,7 +234,7 @@ int main(int argc, char *argv[])
 			while (1){
 
 
-				numread = fread(buf, 1, BUFSIZE, fp);
+				numread = fread(buf, 1, SendBUFSIZE, fp);
 
 				//파일을 읽어서 buf에 저장하고, 그 읽은 만큼의 바이트 크기를 numread에 저장. 
 
@@ -261,8 +270,6 @@ int main(int argc, char *argv[])
 
 
 	}
-	printf("server: end of file on %d\n", fd);
-	FD_CLR(fd, &mask);
 
-
+	printf("Finished Server\n ");
 }
