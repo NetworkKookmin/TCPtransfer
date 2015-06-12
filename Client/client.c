@@ -49,10 +49,12 @@ int sockid, retcode,nread,retval,addrlen;
     char file_size[50];
     char rateCount[20];
     char ipAddress[20]; 
-    char strfileSize[20];     
+    char strfileSize[20]; 
+	char strCredit[20] = "credit";
     int start=0;
     int thiscount=0;
     int sizeCount=0;
+	int studentID=0;
 
 
 
@@ -104,8 +106,9 @@ printf("********* connect pass \n");
     
 while(1){ 
  
-        printf("\n\n\n\n ----Enter your command.---------------------\n put [file_name] | get [file_name] | close \n --------------------------------------------\n sendrate [rate] | recvrate [rate] | ratecurr \n --------------------------------------------\n"); 
-        scanf("%s",command); 
+
+	printf("\n\n\n\n ----Enter your command.---------------------\n put [file_name] | get [file_name] | close \n --------------------------------------------\n sendrate [rate] | recvrate [rate] | ratecurr \n --------------------------------------------\n credit [studentID] \n");
+	scanf("%s", command);
         if(!strcmp(strClose,command)){  // close 입력시 종료 
  
             strcpy(msg,strClose); 
@@ -143,7 +146,17 @@ while(1){
             write(sock,rateCount,20);
 
         }
- 
+		if (!strcmp(strCredit, command)){
+
+			studentID = atoi(file_name);
+
+			switch (studentID) {
+
+				case 20113251: credit20113251(); break;
+
+			}
+			continue;
+		}
  
  
         if(!strcmp(strPut,command)){  // put 입력시 
@@ -298,5 +311,11 @@ void initialization(int* sumfileSize,int* fileSize,int* count,double* percent){
 
 }
 
+
+void credit20113251();
+{
+	printf("20113251 권영훈 \n");
+	printf("TCP Put Protocol & Making socket \n");
+}
 
  
