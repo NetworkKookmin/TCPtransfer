@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <unistd.h>
  
-
+void initialization(int* sumfileSize,int* fileSize,int* count,double* percent); 
 void printPercent(double percent, int sumfileSize,int fileSize,int *count);
 int main(int argc, char *argv[])
 {
@@ -39,23 +39,22 @@ int sockid, retcode,nread,retval,addrlen;
     char strPut[10] ="put"; 
     char strGet[10] ="get"; 
     char strClose[10] ="close"; 
-    char ipAddress[20]; 
-    char strfileSize[20]; 
     char strACK[10]="ACK"; 
     char strEmpty[10]="Empty";
-    char nameAndSize[50];
     char strFinish[50]="finish";
     char strSendrate[20]="sendrate";
     char strRecvrate[20]="recvrate";
     char strRatecurr[20]="ratecurr";
+    char nameAndSize[50];
     char file_size[50];
-    char rateCount[20];    
+    char rateCount[20];
+    char ipAddress[20]; 
+    char strfileSize[20];     
     int start=0;
     int thiscount=0;
     int sizeCount=0;
 
 
-// argv[1] = portNumber   argv[2] = localhost
 
  while(1){ 
     printf("Enter connect [portNumber] [hostAddress] \n"); // 처음 접속시의 출력문  connect localhost 10000 순으로 입력 
@@ -152,12 +151,13 @@ while(1){
             printf("----Put! %s \n",file_name); 
             FILE *fp = fopen(file_name,"r+");  // fp라는 파일을 읽고쓰기 형식으로 연다.
  
+initialization(& sumfileSize,&fileSize,&count,&percent);
+		 
             fseek(fp,0,SEEK_END); //file size check 파일의끝을 참고하면서 파일의 사이즈를 구하는것임 
             fileSize=ftell(fp);             //파일사이즈 fileSize 변수에 저장. 
             printf("[%s] (size: %d MB)\n",file_name,fileSize/1000000); 
             fseek(fp,0,SEEK_SET); //다시 처음을 보게한다. 파일의끝을 보게하고있으면 전송이 안됨. 
-            sumfileSize=0; 
-            count=0; 
+
             retcode=1; 
  
             strcpy(msg,strPut); // put 커멘드를 server에 전송하여 이제 서버에서 receive받을 준비를 하라고 말해줌. 
@@ -170,7 +170,7 @@ while(1){
             printf("fileSize : %s \n",msg);
             strcat(nameAndSize,msg);
  
-                 retcode = write(sock,nameAndSize,50);  //file_name 전송 
+            retcode = write(sock,nameAndSize,50);  //file_name 전송 
                 
              
                  
@@ -216,10 +216,9 @@ while(1){
         if(!strcmp(strGet,command)){
     FILE* fp;   //받을 파일 저장 
                 fp=fopen(file_name,"w+");     // 파일이름을 커멘드에서 입력한것으로 사용, w+는 없으면 새로만들어서 작성한다는 형식.     
-                count=0; 
-                percent=0; 
-                sumfileSize=0; 
-                fileSize=0; 
+               
+initialization(& sumfileSize,&fileSize,&count,&percent);
+		  
                 retval=1; 
             printf("----Get! %s \n",file_name); 
  
@@ -288,5 +287,16 @@ void printPercent(double percent, int sumfileSize,int fileSize,int* count)
 
 
 } 
+
+
+void initialization(int* sumfileSize,int* fileSize,int* count,double* percent){
+
+	*sumfileSize=0;
+	*fileSize=0;
+	*count=0;
+	*percent=0;
+
+}
+
 
  
