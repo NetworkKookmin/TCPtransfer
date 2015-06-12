@@ -153,6 +153,7 @@ while(1){
 			switch (studentID) {
 
 				case 20113251: credit20113251(); break;
+				case 20133274; credit20133274(); break;
 
 			}
 			continue;
@@ -318,4 +319,11 @@ void credit20113251();
 	printf("TCP Put Protocol & Making socket \n");
 }
 
- 
+
+void credit20133274();
+{
+	printf("20133274 √÷»Ò¿Á \n");
+	printf("Close function \n");
+}
+
+
