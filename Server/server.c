@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -24,7 +25,7 @@ int main(int argc, char *argv[])
 
 
 	char msg[255];
-	char buf[64];
+	char buf[255];
 	char file_name[50];
 	char strPut[10] = "put";        // client 명령 비교하기 위해 (strcmp 사용)
 	char strGet[10] = "get";
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
 	char strACK[10] = "ACK";
 	char strEmpty[10] = "Empty";
 	int fileSize = 0;              //파일의 전체 사이즈를 나타내는 변수
-	int BUFSIZE = 63;
+	int BUFSIZE = 64;
 	int sumfileSize = 0;           //받아오거나 보내는 파일의 현재 사이즈를 나타내는 변수
 	int secondCount = 0;           // 1초를 나타내기 위한 count 단위
 	double percent;
@@ -101,17 +102,17 @@ int main(int argc, char *argv[])
 		// client 에서 보낸 command명령 받음
 
 		////////////////////////////////client put
-		sizeCount = 0;
-		thiscount = 0;
-		fileSize = 0;
-
-		bzero(file_size, 50);
-		bzero(file_name, 50);
 
 		if (!strcmp(strPut, msg)){
 
 			nread = read(new_sock, msg, 50);
 			//recive file_name & file_Size  client에서 파일이름 받아옴
+			sizeCount = 0;
+			thiscount = 0;
+			fileSize = 0;
+
+			bzero(file_size, 50);
+			bzero(file_name, 50);
 
 			strcpy(nameAndSize, msg);
 			for (start = 0; start<strlen(nameAndSize); start++){
@@ -151,7 +152,7 @@ int main(int argc, char *argv[])
 			strcpy(msg, strEmpty);
 			while (1){
 
-				retval = read(new_sock, buf, 64);
+				retval = read(new_sock, buf, BUFSIZE);
 				sumfileSize += retval; //그것들을 현재받는파일의 사이즈에 더해준다 // 현재 크기를 나타냄.
 
 				fwrite(buf, 1, retval, fp);
@@ -185,6 +186,80 @@ int main(int argc, char *argv[])
 
 		}
 		////////////////////////////////client put
+
+
+
+
+
+
+		////////////////////////////////client 에서 get명령 호출시 아래와 같이 실행 
+
+		if (!strcmp(strGet, msg)){
+
+
+			nread = read(new_sock, msg, 50);
+
+			//recive file_name 파일의 이름을 받아온다. 
+
+			strcpy(file_name, msg); //파일 이름을 msg--> file_name 으로 복사한다. 
+
+			printf("sending file %s \n", msg);  //파일 이름 출력 
+
+			FILE* fp;
+			fp = fopen(file_name, "r+");    //file open     
+			percent = 0;
+			sumfileSize = 0;
+			retcode = 1;
+			fseek(fp, 0, SEEK_END); // fseek 함수는 파일의 끝을 확인해서 그 파일의 사이즈를 볼 수 있게해줌. 
+			fileSize = ftell(fp); //파일 사이즈를 저장한다. 
+			printf("file size %d\n", fileSize);
+			printf("Transfer status: send[%s] [ 0% , 0MB/%dMB]\n", file_name, fileSize / 1000000);
+			sprintf(msg, "%d", fileSize); // sprintf는 itoa 의 대신하는 리눅스의 인트를 문자로 변경하는 함수.
+
+			retcode = write(new_sock, msg, 20);
+			//fileSize를 클라이언트에 전송함 
+
+			fseek(fp, 0, SEEK_SET); // start reference 다시 시작을 가리키게 변경 
+			secondCount = 0;
+
+			while (1){
+
+
+				numread = fread(buf, 1, BUFSIZE, fp);
+
+				//파일을 읽어서 buf에 저장하고, 그 읽은 만큼의 바이트 크기를 numread에 저장. 
+
+				retcode = write(new_sock, buf, numread);
+				// buf에있는정보를 client에 전달하고 , 그 전달한 만큼의 바이트 크기를 retcode에 저장. 
+
+				sumfileSize += retcode; //현재 보내는 파일의 크기를 sumfileSize에 계속 추가로 더함. 
+
+				percent = ((double)sumfileSize / fileSize) * 100; //퍼센트 정의 
+
+
+				if (secondCount == 80000){
+					printf("Transfer status: send[%s] [%d% , %dMB/%dMB]\n", file_name, (int)percent, sumfileSize / 1000000, fileSize / 1000000);
+					secondCount = 0;
+				}
+
+				secondCount++;
+				if (retcode <= -1) {
+					printf("client: sendto failed: %d\n", errno);
+					exit(0);
+				}
+				if (sumfileSize >= fileSize){
+					printf("sumfilesize : %d numread : %d , retcode : %d \n", sumfileSize, numread, retcode);
+					printf("Transfer status: send[%s] [100% , %dMB/%dMB]\n", file_name, fileSize / 1000000, fileSize / 1000000);
+					printf(" File upload OK  !! \n ");
+					break;
+				}
+
+			}  //close while 
+
+		} //close get if 
+
+
+
 	}
 	printf("server: end of file on %d\n", fd);
 	FD_CLR(fd, &mask);

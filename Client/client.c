@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -27,13 +28,13 @@ int main(int argc, char *argv[])
 	double percent = 0;
 	char msg[255];
 	char input[255];
-	char buf[64];
+	char buf[255];
 	char strComplete[10] = "complete";
 	char portNumber[20];
 	char command[20];
 	char file_name[50];
 	int randomPortNum = rand() % 1000;
-	int BUFSIZE = 63;
+	int BUFSIZE = 64;
 	char strConnect[10] = "connect";
 	char strPut[10] = "put";
 	char strGet[10] = "get";
@@ -42,8 +43,15 @@ int main(int argc, char *argv[])
 	char strfileSize[20];
 	char strACK[10] = "ACK";
 	char strEmpty[10] = "Empty";
-	char nameAndSize[100];
+	char nameAndSize[50];
 	char strFinish[50] = "finish";
+
+
+	char file_size[50];
+	int start = 0;
+	int thiscount = 0;
+	int sizeCount = 0;
+
 
 	// argv[1] = portNumber   argv[2] = localhost
 
@@ -108,7 +116,6 @@ int main(int argc, char *argv[])
 		}
 		scanf("%s", file_name);
 
-
 		////////////////////////////// put 
 
 
@@ -125,7 +132,7 @@ int main(int argc, char *argv[])
 			count = 0;
 			retcode = 1;
 
-			strcpy(msg, strPut); // put 커멘드를 server에 전송하여 이제 서버에서 recive받을 준비를 하라고 말해줌. 
+			strcpy(msg, strPut); // put 커멘드를 server에 전송하여 이제 서버에서 receive받을 준비를 하라고 말해줌. 
 			retcode = write(sock, msg, 20);  //메세지 전송 
 
 			strcpy(nameAndSize, file_name); //
@@ -142,7 +149,7 @@ int main(int argc, char *argv[])
 
 			while (1){
 
-				numread = fread(buf, 1, 64, fp); // fp파일을 읽어서 buf에 저장하고 그 저장한 바이트 만큼 numread에 int값으로 저장 
+				numread = fread(buf, 1, BUFSIZE, fp); // fp파일을 읽어서 buf에 저장하고 그 저장한 바이트 만큼 numread에 int값으로 저장 
 				retcode = write(sock, buf, numread);
 
 				sumfileSize += numread; //byte 수를계속 더해주는것. 현재까지 보낸 파일의 크기를 나타냄. 
@@ -164,7 +171,6 @@ int main(int argc, char *argv[])
 					if (strcmp(msg, strFinish) == 0){
 
 						printf("\r[**********] (100% ) %dMB/%dMB\n", fileSize / 1000000, fileSize / 1000000);
-						printf("strcmp : %d\n", strcmp(msg, strFinish));
 
 						count = 0;
 						printf(" File upload OK !! \n ");
@@ -176,6 +182,55 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
+
+		////////////////////////////////client get
+
+		if (!strcmp(strGet, command)){
+			FILE* fp;   //받을 파일 저장 
+			fp = fopen(file_name, "w+");     // 파일이름을 커멘드에서 입력한것으로 사용, w+는 없으면 새로만들어서 작성한다는 형식.     
+			count = 0;
+			percent = 0;
+			sumfileSize = 0;
+			fileSize = 0;
+			retval = 1;
+			printf("----Get! %s \n", file_name);
+
+			strcpy(msg, strGet); //get command 를 전송해서 server에 알림. 
+			retcode = write(sock, msg, 20);  //메세지 전송 
+			strcpy(msg, file_name);
+			retcode = write(sock, msg, 50);  //file_name 전송 
+
+			//여기서 받아온 msg는 서버에서 전송한것인데, fileSize 를 sprintf로 변환해서 string으로 보낸것. 
+			nread = read(sock, msg, 20);
+			printf("---------------***  %s\n", msg);
+
+			fileSize = atoi(msg); //받은 문자를 다시 string 에서 int로 변환하기위해 atoi함수사용. 
+
+			printf("getting file %s : %dMB\n", file_name, fileSize / 1000000);
+
+			while (1){
+
+				retval = read(sock, buf, BUFSIZE);
+				fwrite(buf, 1, retval, fp);  // 받아온 buf를 파일에 작성.
+				sumfileSize += retval;
+				percent = ((double)sumfileSize / fileSize) * 100;
+				printPercent(percent, sumfileSize, fileSize, &count);
+				count++;
+
+
+				if (sumfileSize >= fileSize){ //더이상 받아온 정보가 없을때 완료. 
+					printf("\r[**********] (100% ) %dMB/%dMB\n", fileSize / 1000000, fileSize / 1000000);
+					count = 0;
+					fclose(fp);
+					break;
+
+				}
+
+			}
+			printf(" File download OK.\n");
+		} //get 종료. 
+
+
 
 	}
 
