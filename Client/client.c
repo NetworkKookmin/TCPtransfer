@@ -155,6 +155,7 @@ while(1){
 				case 20113251: credit20113251(); break;
 				case 20133274: credit20133274(); break;
 				case 20123344: credit20123344(); break;
+				case 20123337: credit20123337(); break;
 			}
 			continue;
 		}
@@ -331,5 +332,11 @@ void credit20123344();
 {
 	printf("20123344 ±è¿¹ÁÖ \n");
 	printf("SendRate & RecvRate function \n");
+}
+
+void credit20123337();
+{
+	printf("20123337 ±è³ªÀ± \n");
+	printf("Initialization function \n");
 }
 
