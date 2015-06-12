@@ -153,8 +153,8 @@ while(1){
 			switch (studentID) {
 
 				case 20113251: credit20113251(); break;
-				case 20133274; credit20133274(); break;
-
+				case 20133274: credit20133274(); break;
+				case 20123344: credit20123344(); break;
 			}
 			continue;
 		}
@@ -326,4 +326,10 @@ void credit20133274();
 	printf("Close function \n");
 }
 
+
+void credit20123344();
+{
+	printf("20123344 ±è¿¹ÁÖ \n");
+	printf("SendRate & RecvRate function \n");
+}
 
