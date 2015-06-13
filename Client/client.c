@@ -312,35 +312,33 @@ void initialization(int* sumfileSize,int* fileSize,int* count,double* percent){
 	*percent=0;
 
 }
-
-
-void credit20113251();
+void credit20113251()
 {
 	printf("20113251 권영훈 \n");
 	printf("TCP Put Protocol & Making socket \n");
 }
 
 
-void credit20133274();
+void credit20133274()
 {
 	printf("20133274 최희재 \n");
 	printf("Close function \n");
 }
 
 
-void credit20123344();
+void credit20123344()
 {
 	printf("20123344 김예주 \n");
 	printf("SendRate & RecvRate function \n");
 }
 
-void credit20123337();
+void credit20123337()
 {
 	printf("20123337 김나윤 \n");
 	printf("Initialization function \n");
 }
 
-void credit20123365();
+void credit20123365()
 {
 	printf("20123365 박지윤\n");
 	printf("printPercent function \n");
