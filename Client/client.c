@@ -59,7 +59,7 @@ int sockid, retcode,nread,retval,addrlen;
 
 
  while(1){ 
-    printf("Enter connect [portNumber] [hostAddress] \n"); // Ã³À½ Á¢¼Ó½ÃÀÇ Ãâ·Â¹®  connect localhost 10000 ¼øÀ¸·Î ÀÔ·Â 
+    printf("Enter connect [portNumber] [hostAddress] \n"); // ì²˜ìŒ ì ‘ì†ì‹œì˜ ì¶œë ¥ë¬¸  connect localhost 10000 ìˆœìœ¼ë¡œ ì…ë ¥ 
     scanf("%s %s %s",input,portNumber,ipAddress); // enter connect 
  
         if (strcmp(strConnect,input)) { 
@@ -109,12 +109,12 @@ while(1){
 
 	printf("\n\n\n\n ----Enter your command.---------------------\n put [file_name] | get [file_name] | close \n --------------------------------------------\n sendrate [rate] | recvrate [rate] | ratecurr \n --------------------------------------------\n credit [studentID] \n");
 	scanf("%s", command);
-        if(!strcmp(strClose,command)){  // close ÀÔ·Â½Ã Á¾·á 
+        if(!strcmp(strClose,command)){  // close ì…ë ¥ì‹œ ì¢…ë£Œ 
  
             strcpy(msg,strClose); 
-            retcode = write(sock,msg,20);  //¸Ş¼¼Áö Àü¼Û 
+            retcode = write(sock,msg,20);  //ë©”ì„¸ì§€ ì „ì†¡ 
          
-            break; // Á¾·á. 
+            break; // ì¢…ë£Œ. 
  
         }
         if(!strcmp(strRatecurr,command)){
@@ -161,54 +161,54 @@ while(1){
 		}
  
  
-        if(!strcmp(strPut,command)){  // put ÀÔ·Â½Ã 
+        if(!strcmp(strPut,command)){  // put ì…ë ¥ì‹œ 
              
             printf("----Put! %s \n",file_name); 
-            FILE *fp = fopen(file_name,"r+");  // fp¶ó´Â ÆÄÀÏÀ» ÀĞ°í¾²±â Çü½ÄÀ¸·Î ¿¬´Ù.
+            FILE *fp = fopen(file_name,"r+");  // fpë¼ëŠ” íŒŒì¼ì„ ì½ê³ ì“°ê¸° í˜•ì‹ìœ¼ë¡œ ì—°ë‹¤.
  
 initialization(& sumfileSize,&fileSize,&count,&percent);
 		 
-            fseek(fp,0,SEEK_END); //file size check ÆÄÀÏÀÇ³¡À» Âü°íÇÏ¸é¼­ ÆÄÀÏÀÇ »çÀÌÁî¸¦ ±¸ÇÏ´Â°ÍÀÓ 
-            fileSize=ftell(fp);             //ÆÄÀÏ»çÀÌÁî fileSize º¯¼ö¿¡ ÀúÀå. 
+            fseek(fp,0,SEEK_END); //file size check íŒŒì¼ì˜ëì„ ì°¸ê³ í•˜ë©´ì„œ íŒŒì¼ì˜ ì‚¬ì´ì¦ˆë¥¼ êµ¬í•˜ëŠ”ê²ƒì„ 
+            fileSize=ftell(fp);             //íŒŒì¼ì‚¬ì´ì¦ˆ fileSize ë³€ìˆ˜ì— ì €ì¥. 
             printf("[%s] (size: %d MB)\n",file_name,fileSize/1000000); 
-            fseek(fp,0,SEEK_SET); //´Ù½Ã Ã³À½À» º¸°ÔÇÑ´Ù. ÆÄÀÏÀÇ³¡À» º¸°ÔÇÏ°íÀÖÀ¸¸é Àü¼ÛÀÌ ¾ÈµÊ. 
+            fseek(fp,0,SEEK_SET); //ë‹¤ì‹œ ì²˜ìŒì„ ë³´ê²Œí•œë‹¤. íŒŒì¼ì˜ëì„ ë³´ê²Œí•˜ê³ ìˆìœ¼ë©´ ì „ì†¡ì´ ì•ˆë¨. 
 
             retcode=1; 
  
-            strcpy(msg,strPut); // put Ä¿¸àµå¸¦ server¿¡ Àü¼ÛÇÏ¿© ÀÌÁ¦ ¼­¹ö¿¡¼­ receive¹ŞÀ» ÁØºñ¸¦ ÇÏ¶ó°í ¸»ÇØÁÜ. 
-            retcode = write(sock,msg,20);  //¸Ş¼¼Áö Àü¼Û 
+            strcpy(msg,strPut); // put ì»¤ë©˜ë“œë¥¼ serverì— ì „ì†¡í•˜ì—¬ ì´ì œ ì„œë²„ì—ì„œ receiveë°›ì„ ì¤€ë¹„ë¥¼ í•˜ë¼ê³  ë§í•´ì¤Œ. 
+            retcode = write(sock,msg,20);  //ë©”ì„¸ì§€ ì „ì†¡ 
              
             strcpy(nameAndSize,file_name); //
             strcat(nameAndSize,".");
-            sprintf(msg,"%d",fileSize);// ÆÄÀÏ»çÀÌÁî´Â itoa ·Î º¯È¯ÇØ¼­ Àü´Ş 
+            sprintf(msg,"%d",fileSize);// íŒŒì¼ì‚¬ì´ì¦ˆëŠ” itoa ë¡œ ë³€í™˜í•´ì„œ ì „ë‹¬ 
 
             printf("fileSize : %s \n",msg);
             strcat(nameAndSize,msg);
  
-            retcode = write(sock,nameAndSize,50);  //file_name Àü¼Û 
+            retcode = write(sock,nameAndSize,50);  //file_name ì „ì†¡ 
                 
              
                  
  
          while(1){             
          
-            numread = fread(buf,1,SendBUFSIZE,fp); // fpÆÄÀÏÀ» ÀĞ¾î¼­ buf¿¡ ÀúÀåÇÏ°í ±× ÀúÀåÇÑ ¹ÙÀÌÆ® ¸¸Å­ numread¿¡ int°ªÀ¸·Î ÀúÀå 
+            numread = fread(buf,1,SendBUFSIZE,fp); // fpíŒŒì¼ì„ ì½ì–´ì„œ bufì— ì €ì¥í•˜ê³  ê·¸ ì €ì¥í•œ ë°”ì´íŠ¸ ë§Œí¼ numreadì— intê°’ìœ¼ë¡œ ì €ì¥ 
                 retcode = write(sock,buf,numread);  
          
-            sumfileSize+=numread; //byte ¼ö¸¦°è¼Ó ´õÇØÁÖ´Â°Í. ÇöÀç±îÁö º¸³½ ÆÄÀÏÀÇ Å©±â¸¦ ³ªÅ¸³¿. 
+            sumfileSize+=numread; //byte ìˆ˜ë¥¼ê³„ì† ë”í•´ì£¼ëŠ”ê²ƒ. í˜„ì¬ê¹Œì§€ ë³´ë‚¸ íŒŒì¼ì˜ í¬ê¸°ë¥¼ ë‚˜íƒ€ëƒ„. 
  
             percent=((double)sumfileSize/fileSize)*100; 
  
-        //Ãâ·Â Æ÷¸ä.  \r Àº µ¤¾î¾²±â,  fflush(stdout) Àº µ¤¾î¾²±â¿ë ÇÔ¼ö  
+        //ì¶œë ¥ í¬ë©§.  \r ì€ ë®ì–´ì“°ê¸°,  fflush(stdout) ì€ ë®ì–´ì“°ê¸°ìš© í•¨ìˆ˜  
 
             printPercent(percent,sumfileSize,fileSize,&count); 
          
-            count++; //count¸¦ °è¼Ó ÃÊ±âÈ­ÇØÁÖ¸é¼­ ½Ç½Ã°£ »óÅÂ ³ªÅ¸³¿. 
+            count++; //countë¥¼ ê³„ì† ì´ˆê¸°í™”í•´ì£¼ë©´ì„œ ì‹¤ì‹œê°„ ìƒíƒœ ë‚˜íƒ€ëƒ„. 
          
             if (retcode <= -1) { 
             printf("client: sendto failed: %d\n",errno); exit(0); 
                 } 
-            if(retcode==0){  // ´õÀÌ»ó º¸³¾°ÍÀÌ ¾øÀ¸¸é Á¾·á.
+            if(retcode==0){  // ë”ì´ìƒ ë³´ë‚¼ê²ƒì´ ì—†ìœ¼ë©´ ì¢…ë£Œ.
 
                 retval=read(sock,msg,50);
                 if(strcmp(msg,strFinish)==0){
@@ -229,38 +229,38 @@ initialization(& sumfileSize,&fileSize,&count,&percent);
 ////////////////////////////////client get
         
         if(!strcmp(strGet,command)){
-    FILE* fp;   //¹ŞÀ» ÆÄÀÏ ÀúÀå 
-                fp=fopen(file_name,"w+");     // ÆÄÀÏÀÌ¸§À» Ä¿¸àµå¿¡¼­ ÀÔ·ÂÇÑ°ÍÀ¸·Î »ç¿ë, w+´Â ¾øÀ¸¸é »õ·Î¸¸µé¾î¼­ ÀÛ¼ºÇÑ´Ù´Â Çü½Ä.     
+    FILE* fp;   //ë°›ì„ íŒŒì¼ ì €ì¥ 
+                fp=fopen(file_name,"w+");     // íŒŒì¼ì´ë¦„ì„ ì»¤ë©˜ë“œì—ì„œ ì…ë ¥í•œê²ƒìœ¼ë¡œ ì‚¬ìš©, w+ëŠ” ì—†ìœ¼ë©´ ìƒˆë¡œë§Œë“¤ì–´ì„œ ì‘ì„±í•œë‹¤ëŠ” í˜•ì‹.     
                
 initialization(& sumfileSize,&fileSize,&count,&percent);
 		  
                 retval=1; 
             printf("----Get! %s \n",file_name); 
  
-            strcpy(msg,strGet); //get command ¸¦ Àü¼ÛÇØ¼­ server¿¡ ¾Ë¸². 
-         retcode = write(sock,msg,20);  //¸Ş¼¼Áö Àü¼Û 
+            strcpy(msg,strGet); //get command ë¥¼ ì „ì†¡í•´ì„œ serverì— ì•Œë¦¼. 
+         retcode = write(sock,msg,20);  //ë©”ì„¸ì§€ ì „ì†¡ 
             strcpy(msg,file_name); 
-         retcode = write(sock,msg,50);  //file_name Àü¼Û 
+         retcode = write(sock,msg,50);  //file_name ì „ì†¡ 
  
-                //¿©±â¼­ ¹Ş¾Æ¿Â msg´Â ¼­¹ö¿¡¼­ Àü¼ÛÇÑ°ÍÀÎµ¥, fileSize ¸¦ sprintf·Î º¯È¯ÇØ¼­ stringÀ¸·Î º¸³½°Í. 
+                //ì—¬ê¸°ì„œ ë°›ì•„ì˜¨ msgëŠ” ì„œë²„ì—ì„œ ì „ì†¡í•œê²ƒì¸ë°, fileSize ë¥¼ sprintfë¡œ ë³€í™˜í•´ì„œ stringìœ¼ë¡œ ë³´ë‚¸ê²ƒ. 
                 nread = read(sock,msg,20); 
                 printf("---------------***  %s\n",msg); 
  
-                fileSize=atoi(msg); //¹ŞÀº ¹®ÀÚ¸¦ ´Ù½Ã string ¿¡¼­ int·Î º¯È¯ÇÏ±âÀ§ÇØ atoiÇÔ¼ö»ç¿ë. 
+                fileSize=atoi(msg); //ë°›ì€ ë¬¸ìë¥¼ ë‹¤ì‹œ string ì—ì„œ intë¡œ ë³€í™˜í•˜ê¸°ìœ„í•´ atoií•¨ìˆ˜ì‚¬ìš©. 
  
                    printf("getting file %s : %dMB\n",file_name,fileSize/1000000); 
  
                 while(1){ 
                 
                 retval = read(sock,buf,RecvBUFSIZE); 
-                    fwrite(buf,1,retval,fp);  // ¹Ş¾Æ¿Â buf¸¦ ÆÄÀÏ¿¡ ÀÛ¼º.
+                    fwrite(buf,1,retval,fp);  // ë°›ì•„ì˜¨ bufë¥¼ íŒŒì¼ì— ì‘ì„±.
                 sumfileSize+=retval;  
                 percent=((double)sumfileSize/fileSize)*100; 
             printPercent(percent,sumfileSize,fileSize,&count); 
             count++; 
  
  
-                    if(sumfileSize>=fileSize){ //´õÀÌ»ó ¹Ş¾Æ¿Â Á¤º¸°¡ ¾øÀ»¶§ ¿Ï·á. 
+                    if(sumfileSize>=fileSize){ //ë”ì´ìƒ ë°›ì•„ì˜¨ ì •ë³´ê°€ ì—†ì„ë•Œ ì™„ë£Œ. 
  printf("\r[**********] (100% ) %dMB/%dMB\n",fileSize/1000000,fileSize/1000000); 
  count=0;  
                             fclose(fp);
@@ -270,7 +270,7 @@ initialization(& sumfileSize,&fileSize,&count,&percent);
  
                 } 
                 printf(" File download OK.\n"); 
-        } //get Á¾·á. 
+        } //get ì¢…ë£Œ. 
     
  
     
@@ -316,27 +316,32 @@ void initialization(int* sumfileSize,int* fileSize,int* count,double* percent){
 
 void credit20113251();
 {
-	printf("20113251 ±Ç¿µÈÆ \n");
+	printf("20113251 ê¶Œì˜í›ˆ \n");
 	printf("TCP Put Protocol & Making socket \n");
 }
 
 
 void credit20133274();
 {
-	printf("20133274 ÃÖÈñÀç \n");
+	printf("20133274 ìµœí¬ì¬ \n");
 	printf("Close function \n");
 }
 
 
 void credit20123344();
 {
-	printf("20123344 ±è¿¹ÁÖ \n");
+	printf("20123344 ê¹€ì˜ˆì£¼ \n");
 	printf("SendRate & RecvRate function \n");
 }
 
 void credit20123337();
 {
-	printf("20123337 ±è³ªÀ± \n");
+	printf("20123337 ê¹€ë‚˜ìœ¤ \n");
 	printf("Initialization function \n");
 }
 
+void credit20123365();
+{
+	printf("20123365 ë°•ì§€ìœ¤\n");
+	printf("printPercent function \n");
+}
